@@ -34,4 +34,4 @@ where
         DS_PRODUTO, '(AVENTAL(.*)((PROCEDIMENTO)+|(IMPERMEAVEL)+|(AZUL)+)(.*))|(MASCARA(.*)((CIRÚRGICA)+|(TRIPLA)+)(.*))|(SAPATILHA(.*)(CIRÚRGICA)+(.*))|TURBANTE(.*)(LONGO)+(.*)|(LUVA(.*)(PROCEDIMENTO)+(.*))|OCULOS(.*)(PROTEÇÃO)+(.*)'
       )
   ) 
-  AND MVTO_ESTOQUE.DT_MVTO_ESTOQUE > to_date('2020-01-01', 'yyyy-mm-dd');
+  AND MVTO_ESTOQUE.DT_MVTO_ESTOQUE > to_date('2020-01-01', 'yyyy-mm-dd')

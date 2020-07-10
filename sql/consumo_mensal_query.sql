@@ -8,7 +8,8 @@ select
 from
   ITMVTO_ESTOQUE
   join UNI_PRO on (
-    ITMVTO_ESTOQUE.CD_PRODUTO = UNI_PRO.CD_PRODUTO
+    ITMVTO_ESTOQUE.CD_PRODUTO = UNI_PRO.CD_PRODUTO and
+    ITMVTO_ESTOQUE.CD_UNI_PRO = UNI_PRO.CD_UNI_PRO  ---- estava no registro Original do Carlos - ou seja é necessário considerar a unidade do produto naquele lote de movimentacao
   )
   join MVTO_ESTOQUE on (
     ITMVTO_ESTOQUE.CD_MVTO_ESTOQUE = MVTO_ESTOQUE.CD_MVTO_ESTOQUE
@@ -16,10 +17,10 @@ from
   join PRODUTO on (
     ITMVTO_ESTOQUE.CD_PRODUTO = PRODUTO.CD_PRODUTO
   )
-  join COTA_SETOR on (
+  join COTA_SETOR on (    --- Não estamos apresentando cota - retiraria esse join - apenas consume recurso de maquina
     PRODUTO.CD_PRODUTO = COTA_SETOR.CD_PRODUTO
   )
-  join SETOR on (
+  join SETOR on (  --- idem para este Join ---- Não estamos apresentando esta informação - retiraria esse join - apenas consume recurso de maquina
     COTA_SETOR.CD_SETOR = SETOR.CD_SETOR
   )
 where

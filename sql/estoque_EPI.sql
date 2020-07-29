@@ -1,63 +1,29 @@
 SELECT
-  cd_produto,
-  ds_produto,
-  qt_estoque,
-  ds_unidade
+  PRODUTO.CD_PRODUTO,
+  UPPER(PRODUTO.DS_PRODUTO) DS_PRODUTO,
+  SUM (EST_PRO.QT_ESTOQUE_ATUAL) / DBAMV.VERIF_VL_FATOR_PROD(PRODUTO.CD_PRODUTO) QT_ESTOQUE,
+  DBAMV.VERIF_DS_UNID_PROD(PRODUTO.CD_PRODUTO) DS_UNIDADE
 FROM
-  (
-    SELECT
-      estoque.cd_estoque,
-      estoque.ds_estoque,
-      especie.cd_especie,
-      especie.ds_especie,
-      classe.cd_classe,
-      classe.ds_classe,
-      sub_clas.cd_sub_cla,
-      sub_clas.ds_sub_cla,
-      produto.cd_produto,
-      upper(produto.ds_produto) ds_produto,
-      SUM (est_pro.qt_estoque_atual) / dbamv.verif_vl_fator_prod(produto.cd_produto) qt_estoque,
-      DBAMV.verif_ds_unid_prod(produto.cd_produto) ds_unidade
-    FROM
-      dbamv.estoque ESTOQUE,
-      dbamv.est_pro,
-      dbamv.produto,
-      dbamv.sub_clas,
-      dbamv.classe,
-      dbamv.especie
-    WHERE
-      estoque.cd_estoque = est_pro.cd_estoque
-      AND est_pro.cd_produto IN (
-        SELECT
-          cd_produto
-        FROM
-          dbamv.produto a
-        WHERE
-          (
-            a.cd_produto = produto.cd_produto
-          )
-      )
-      AND produto.cd_sub_cla = sub_clas.cd_sub_cla
-      AND produto.cd_classe = sub_clas.cd_classe
-      AND produto.cd_especie = especie.cd_especie
-      AND sub_clas.cd_classe = classe.cd_classe
-      AND sub_clas.cd_especie = especie.cd_especie
-      AND classe.cd_especie = especie.cd_especie
-      AND produto.sn_mestre = 'N'
-      AND produto.sn_kit = 'N'
-      AND estoque.cd_multi_empresa = 1
-    GROUP BY
-      produto.ds_produto,
-      produto.cd_produto
-  )
+  DBAMV.ESTOQUE ESTOQUE,
+  DBAMV.EST_PRO,
+  DBAMV.PRODUTO,
+  DBAMV.SUB_CLAS,
+  DBAMV.CLASSE,
+  DBAMV.ESPECIE
 WHERE
-  CD_PRODUTO in (
-    (
-      SELECT
-        CD_PRODUTO
-      FROM
-        DBAMV.PRODUTO
-      WHERE
-        CD_PRODUTO IN (33020103, 191400, 154590, 202592, 201375, 202606, 20800, 154614, 154590)
-    )
-  )
+  ESTOQUE.CD_ESTOQUE = EST_PRO.CD_ESTOQUE
+  AND EST_PRO.CD_PRODUTO IN (SELECT CD_PRODUTO FROM DBAMV.PRODUTO A WHERE A.CD_PRODUTO = PRODUTO.CD_PRODUTO)
+  AND PRODUTO.CD_PRODUTO IN (33020103, 191400, 154590, 202592, 201375, 202606, 20800, 154614, 154590)
+  AND PRODUTO.CD_SUB_CLA = SUB_CLAS.CD_SUB_CLA
+  AND PRODUTO.CD_CLASSE = SUB_CLAS.CD_CLASSE
+  AND PRODUTO.CD_ESPECIE = ESPECIE.CD_ESPECIE
+  AND SUB_CLAS.CD_CLASSE = CLASSE.CD_CLASSE
+  AND SUB_CLAS.CD_ESPECIE = ESPECIE.CD_ESPECIE
+  AND CLASSE.CD_ESPECIE = ESPECIE.CD_ESPECIE
+  AND PRODUTO.SN_MESTRE = 'N'
+  AND PRODUTO.SN_KIT = 'N'
+  AND ESTOQUE.CD_MULTI_EMPRESA = 1
+GROUP BY
+  PRODUTO.DS_PRODUTO,
+  PRODUTO.CD_PRODUTO
+
